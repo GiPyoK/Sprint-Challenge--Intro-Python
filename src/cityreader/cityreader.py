@@ -10,7 +10,7 @@ class City:
     self.lon = lon
 
   def __str__(self):
-    return f"{self.name}, {self.lat}, {self.lon}"
+    return f"{self.name}: ({self.lat}, {self.lon})"
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -37,7 +37,7 @@ def cityreader(cities=[]):
         if lineCount == 0:
           lineCount += 1
         else:
-          cities.append(City(row[0],row[3],row[4]))
+          cities.append(City(row[0], float(row[3]), float(row[4])))
     return cities
 
 cityreader(cities)
@@ -75,6 +75,46 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
+latlon1 = []
+latlon2 = []
+
+inputRecieved = False
+while(not inputRecieved):
+  corner1 = input("lat1,lon1: ")
+
+  if not ',' in corner1:
+    print("Please enter in \"latitude,longitude\" format")
+    continue
+
+  input1 = corner1.split(',')
+
+  if not len(input1) == 2:
+    print("Please enter in \"latitude,longitude\" format")
+    continue
+  elif not isinstance(float(input1[0]), float) and not isinstance(float(input1[1]), float):
+    print("Please enter in \"latitude,longitude\" format")
+    continue
+
+  corner2 = input("lat2,lon2: ")
+
+  if not ',' in corner1:
+    print("Please enter in \"latitude,longitude\" format")
+    continue
+
+  input2 = corner2.split(',')
+
+  if not len(input2) == 2:
+    print("Please enter in \"latitude,longitude\" format")
+    continue
+  elif not isinstance(float(input2[0]), float) and not isinstance(float(input2[1]), float):
+    print("Please enter in \"latitude,longitude\" format")
+    continue
+
+  latlon1.append(float(input1[0]))
+  latlon1.append(float(input1[1]))
+  latlon2.append(float(input2[0]))
+  latlon2.append(float(input2[1]))
+  inputRecieved = True
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
@@ -83,5 +123,31 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
+  minLat = 0.0
+  maxLat = 0.0
+  minLon = 0.0
+  maxLon = 0.0
+
+  if lat1 < lat2:
+    minLat = lat1
+    maxLat = lat2
+  else:
+    minLat = lat2
+    maxLat = lat1
+
+  if lon1 < lon2:
+    minLon = lon1
+    maxLon = lon2
+  else:
+    minLon = lon2
+    maxLon = lon1
+
+  for city in cities:
+    if (city.lat >= minLat and city.lat <= maxLat) and (city.lon >= minLon and city.lon <= maxLon):
+      within.append(city)
+      print(city)
 
   return within
+
+cityreader_stretch(latlon1[0], latlon1[1], latlon2[0], latlon2[1], cities)
+
